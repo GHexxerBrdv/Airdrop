@@ -14,12 +14,12 @@ contract AirdropV1Test is Test {
     function setUp() public {
         vm.startPrank(owner);
         proton = new Proton();
-        airdrop = new AirdropV1(proton);
+        airdrop = new AirdropV1(proton, 150);
         proton.mint(address(airdrop), 1e6 * 1e18);
         vm.stopPrank();
     }
 
-    function test_construction() public {
+    function test_construction() public view {
         assertEq(proton.balanceOf(address(airdrop)), 1e6 * 1e18);
         assertEq(proton.getMinterAuthority(), owner);
         assertEq(airdrop.getProton(), address(proton));
