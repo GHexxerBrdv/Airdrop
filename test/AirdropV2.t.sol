@@ -29,6 +29,18 @@ contract AirdropV2Test is Test {
     uint256 amount2 = 75000000000000000000;
     uint256 amount3 = 17000000000000000000;
     uint256 amount4 = 19000000000000000000;
+    bytes32 proof11 = 0x05ad1f0ef71944d506af44fdfa0a67ff9ab1563becd9a81a6d6c9edeeaa9745b;
+    bytes32 proof12 = 0x97aaa16f2d82ee950ffea417c76085716d62b5ab444ae3405cb1d299e0f79a37;
+    bytes32 proof21 = 0x099910053bcc7c4f4091e2ae5d1a3403a6cfe9a41e8dfe8f0acc0f14d03f7090;
+    bytes32 proof22 = 0x97aaa16f2d82ee950ffea417c76085716d62b5ab444ae3405cb1d299e0f79a37;
+    bytes32 proof31 = 0x5ab8d5376d538ed7d210982f3d792af135ff2fa95be2196124b5bc5bef2f61cb;
+    bytes32 proof32 = 0xbe610ff200d677ff148915de839fc3612c6c0ce4b76cb850f9b22fe44f130061;
+    bytes32 proof41 = 0xbad0610e5cc5bcda9389ac739fc20329054bd8f11da28ac630b379f680aef44d;
+    bytes32 proof42 = 0xbe610ff200d677ff148915de839fc3612c6c0ce4b76cb850f9b22fe44f130061;
+
+    address[] public accounts = [user1, user2, user3, user4];
+    uint256[] public amounts = [amount1, amount2, amount3, amount4];
+    bytes32[][] public proofs = [[proof11, proof12], [proof21, proof22], [proof31, proof32], [proof41, proof42]];
 
     function setUp() public {
         vm.startPrank(owner);
@@ -147,5 +159,13 @@ contract AirdropV2Test is Test {
         uint256 endingBalanceOfUser1 = proton.balanceOf(user1);
         console.log("Ending balance:", endingBalanceOfUser1);
         assertEq(satrtingBalanceOfUser1, 0);
+    }
+
+    function test_BatchClaim() public {
+        amounts.pop();
+        accounts.pop();
+        proofs.pop();
+        // vm.expectRevert();
+        airdrop.batchClaim(accounts, amounts, proofs);
     }
 }

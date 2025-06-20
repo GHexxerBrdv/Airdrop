@@ -16,6 +16,7 @@ contract AirdropV2 is Ownable, EIP712 {
     error AirdropV2__InvalidProof();
     error AirdropV2__UserHasAlreadyClaim(address account);
     error AirdropV2__InvalidSignature();
+    error AirdropV2__InvalidArrayLength();
 
     IERC20 private airdropToken;
     bytes32 private root;
@@ -33,6 +34,7 @@ contract AirdropV2 is Ownable, EIP712 {
     }
 
     event ClaimedAirdrop(address account, uint256 amount);
+    event ClaimSkiped(address account, string message);
 
     constructor(string memory name, string memory version) Ownable(msg.sender) EIP712(name, version) {}
 
@@ -78,6 +80,30 @@ contract AirdropV2 is Ownable, EIP712 {
         hasClaimed[account] = true;
         emit ClaimedAirdrop(account, amount);
         airdropToken.safeTransfer(account, amount);
+    }
+
+    function batchClaim(address[] memory accounts, uint256[] memory amounts, bytes32[][] memory proofs) external {
+        if (accounts.length != amounts.length || accounts.length != proofs.length) {
+            revert AirdropV2__InvalidArrayLength();
+        }
+        uint256 i = 0;
+        for (; i < accounts.length; ++i) {
+            if (hasClaimed[accounts[i]]) {
+                emit ClaimSkiped(accounts[i], "Account has already claimed");
+                continue;
+            }
+            bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(accounts[i], amounts[i]))));
+            if (!MerkleProof.verify(proofs[i], root, leaf)) {
+                emit ClaimSkiped(accounts[i], "Invalid proof");
+                continue;
+            }
+
+            hasClaimed[accounts[i]] = true;
+
+            emit ClaimedAirdrop(accounts[i], amounts[i]);
+
+            airdropToken.safeTransfer(accounts[i], amounts[i]);
+        }
     }
 
     function getMerkleRoot() external view returns (bytes32) {
