@@ -27,8 +27,8 @@ contract MakeMerkle is Script, ScriptHelper {
 
     Merkle private m = new Merkle(); // instance of the merkle contract from Murky to do shit
 
-    string private inputPath = "/script/merkletree/target/input.json";
-    string private outputPath = "/script/merkletree/target/output.json";
+    string private inputPath = "/script/merkletree/target/input2.json";
+    string private outputPath = "/script/merkletree/target/output2.json";
 
     string private elements = vm.readFile(string.concat(vm.projectRoot(), inputPath)); // get the absolute path
     string[] private types = elements.readStringArray(".types"); // gets the merkle tree leaf types from json using forge standard lib cheatcode

@@ -5,7 +5,7 @@ import {Script} from "forge-std/Script.sol";
 import {Proton} from "../src/token/proton.sol";
 
 contract ProtonScript is Script {
-    Proton p;
+    Proton public p;
 
     function run() external returns (Proton) {
         vm.startBroadcast();
