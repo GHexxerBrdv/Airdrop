@@ -7,7 +7,7 @@ import {AirdropV2} from "../src/AirdropV2.sol";
 contract AirdropV2Script is Script {
     AirdropV2 public airdrop;
     string name = "Proton Airdrop";
-    string version = "0.0.1";
+    string version = "0.0.2";
 
     function run() external returns (AirdropV2) {
         vm.startBroadcast();

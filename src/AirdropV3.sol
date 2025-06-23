@@ -83,7 +83,7 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     function setAirdrop(
         bytes32 _root,
         IERC20 token,
-        uint256 _privatePhaseAMount,
+        uint256 _privatePhaseAmount,
         uint256 _publicPhaseAmount,
         uint256 _duration,
         uint256 _interval
@@ -91,7 +91,7 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
         root = _root;
         airdropToken = token;
         phase = PHASE.PRIVATE;
-        privatePhaseAmount = _privatePhaseAMount;
+        privatePhaseAmount = _privatePhaseAmount;
         publicPhaseAmount = _publicPhaseAmount;
         timeDuration = block.timestamp + (_duration * 1 weeks);
         interval = _interval;
@@ -143,34 +143,6 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
         airdropToken.safeTransfer(account, amount);
     }
 
-    function batchClaim(address[] memory accounts, uint256[] memory amounts, bytes32[][] memory proofs)
-        external
-        IfPrivate
-        nonReentrant
-    {
-        if (accounts.length != amounts.length || accounts.length != proofs.length) {
-            revert AirdropV3__InvalidArrayLength();
-        }
-        uint256 i = 0;
-        for (; i < accounts.length; ++i) {
-            if (hasClaimed[accounts[i]]) {
-                emit ClaimSkiped(accounts[i], "Account has already claimed");
-                continue;
-            }
-            bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(accounts[i], amounts[i]))));
-            if (!MerkleProof.verify(proofs[i], root, leaf)) {
-                emit ClaimSkiped(accounts[i], "Invalid proof");
-                continue;
-            }
-
-            hasClaimed[accounts[i]] = true;
-            privatePhaseAmount -= amounts[i];
-            emit ClaimedAirdrop(accounts[i], amounts[i]);
-
-            airdropToken.safeTransfer(accounts[i], amounts[i]);
-        }
-    }
-
     function claim() external nonReentrant {
         if (phase != PHASE.PUBLIC) {
             revert AirdropV3__OnlyClaimableInPublicPhase();
@@ -186,6 +158,7 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
         }
 
         hasClaimed[caller] = true;
+        publicPhaseAmount = publicPhaseAmount - 1e18;
         emit ClaimedAirdrop(caller, 1e18);
         airdropToken.safeTransfer(caller, amount);
     }
@@ -220,9 +193,8 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
         returns (bool upkeepNeeded, bytes memory /* performData */ )
     {
         bool isPrivate = (phase == PHASE.PRIVATE) ? true : false;
-        bool intervalPassed = (block.timestamp - lastTimestamp) > interval;
         bool timeDurationPassed = block.timestamp > timeDuration;
-        upkeepNeeded = (isPrivate && intervalPassed && timeDurationPassed);
+        upkeepNeeded = (isPrivate && timeDurationPassed);
     }
 
     function performUpkeep(bytes calldata /* performData */ ) external override {
@@ -242,5 +214,9 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
         phase = PHASE.PUBLIC;
 
         emit AirdropIsNowPublic(lastTimestamp);
+    }
+
+    function getPhase() external view returns (PHASE) {
+        return phase;
     }
 }
