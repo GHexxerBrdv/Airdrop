@@ -59,7 +59,8 @@ To generate the input file and then the merkle root and proofs, run the followin
 using the commands directly:
 
 ```bash
-forge script script/merkletree/GenerateInput.s.sol:GenerateInput && forge script script/merkletree/MakeMerkle.s.sol:MakeMerkle
+forge script script/merkletree/GenerateInput.s.sol:GenerateInput 
+forge script script/merkletree/MakeMerkle.s.sol:MakeMerkle
 ```
 
 Then, retrieve the `root` (there may be more than 1, but they will all be the same) from `script/merkletree/target/output.json`.
