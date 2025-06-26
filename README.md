@@ -1,6 +1,6 @@
 # Airdrop Smart contract
 
-- [bout project](#about-project)
+- [About project](#about-project)
 - [Getting Started](#getting-started)
   - [Requirements](#requirements)
   - [Quickstart](#quickstart)
