@@ -25,7 +25,7 @@ contract InteractionV3 is Script {
         console2.log(airdrop);
 
         vm.startBroadcast();
-        AirdropV3(airdrop).setAirdrop(root, IERC20(proton), privatePhaseAmount, publicPhaseAmount, duration);
+        // AirdropV3(airdrop).setAirdrop(root, IERC20(proton), privatePhaseAmount, publicPhaseAmount, duration);
         Proton(proton).mint(airdrop, 10e18);
         vm.stopBroadcast();
 

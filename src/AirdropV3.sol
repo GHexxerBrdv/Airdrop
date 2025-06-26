@@ -92,8 +92,6 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     event SetUpAirdrop(bytes32 root, IERC20 token, uint256 privatePhaseAmount, uint256 publicPhaseAMount);
     event AirdropIsNowPublic(uint256 timestamp);
 
-    constructor(string memory name, string memory version) Ownable(msg.sender) EIP712(name, version) {}
-
     /**
      *
      * @param _root Merkle root for the airdrop, To varify the claimer.
@@ -102,13 +100,15 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
      * @param _publicPhaseAmount Amount distributed in public phase
      * @param _duration Duration for the private phase
      */
-    function setAirdrop(
+    constructor(
+        string memory name,
+        string memory version,
         bytes32 _root,
         IERC20 token,
         uint256 _privatePhaseAmount,
         uint256 _publicPhaseAmount,
         uint256 _duration
-    ) external onlyOwner {
+    ) Ownable(msg.sender) EIP712(name, version) {
         root = _root;
         airdropToken = token;
         phase = PHASE.PRIVATE;

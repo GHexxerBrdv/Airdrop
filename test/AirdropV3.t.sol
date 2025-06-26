@@ -49,8 +49,7 @@ contract AirdropV2Test is Test {
     function setUp() public {
         vm.startPrank(owner);
         proton = new Proton();
-        airdrop = new AirdropV3(name, version);
-        airdrop.setAirdrop(root, proton, privateAmount, publicAmount, duration);
+        airdrop = new AirdropV3(name, version, root, proton, privateAmount, publicAmount, duration);
         proton.setMinterAuthority(minter);
         vm.stopPrank();
 

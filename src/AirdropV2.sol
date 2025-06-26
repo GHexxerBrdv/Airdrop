@@ -47,14 +47,15 @@ contract AirdropV2 is Ownable, EIP712 {
     event ClaimedAirdrop(address account, uint256 amount);
     event ClaimSkiped(address account, string message);
 
-    constructor(string memory name, string memory version) Ownable(msg.sender) EIP712(name, version) {}
-
     /**
      * The admin function which allows the owner to setup the airdrop for the intended token.
      * @param _root Merkle root for the airdrop, To varify the claimer.
      * @param token Token for which the airdrop will be set.
      */
-    function setAirdrop(bytes32 _root, IERC20 token) external onlyOwner {
+    constructor(string memory name, string memory version, bytes32 _root, IERC20 token)
+        Ownable(msg.sender)
+        EIP712(name, version)
+    {
         root = _root;
         airdropToken = token;
     }

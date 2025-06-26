@@ -22,7 +22,6 @@ contract DeployContracts is Script {
 
         vm.startBroadcast();
         Proton(proton).mint(airdrop, 100e18);
-        AirdropV2(airdrop).setAirdrop(root, IERC20(proton));
         vm.stopBroadcast();
 
         console2.log(Proton(proton).balanceOf(airdrop));
