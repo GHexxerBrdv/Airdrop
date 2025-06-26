@@ -13,7 +13,7 @@ import {AutomationCompatibleInterface} from
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
- * @title Airdrop
+ * @title AirdropV3
  * @author Gaurang Bharadava
  * Airdrop with two phase
  * 1. private with merkle airdrop
@@ -121,8 +121,8 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice This function can be called only if Airdrop in private phase.
-     * @notice Proof will ensure that only intended user or whitelisted user can claim their amount of tokens.
+     * @dev This function can be called only if Airdrop in private phase.
+     * @dev Proof will ensure that only intended user or whitelisted user can claim their amount of tokens.
      * @param amount Amount the user wants to claim.
      * @param proof Array of proof that verify the claimer and the amount.
      */
@@ -144,11 +144,11 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice Any user who is permited to claim tokens on behalf of the whitelistd claimer can call this fucntion, but they should have signature signed by the claimer.
+     * @dev Any user who is permited to claim tokens on behalf of the whitelistd claimer can call this fucntion, but they should have signature signed by the claimer.
      * @param account The account for the user wants to claim.
      * @param amount Amount for the account the user want to claim.
      * @param proof Proof to verify the whitelisted claimer and amount.
-     * @notice v, r, s The component oof signature user has signed.
+     * @param v, r, s The component oof signature user has signed.
      */
     function claimPermit(address account, uint256 amount, bytes32[] calldata proof, uint8 v, bytes32 r, bytes32 s)
         external
@@ -177,7 +177,7 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice This fucntion can only be called in public phase by anyone and calim upto one airdrop token.
+     * @dev This fucntion can only be called in public phase by anyone and calim upto one airdrop token.
      */
     function claim() external nonReentrant {
         if (phase != PHASE.PUBLIC) {
@@ -200,28 +200,28 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice Getter function for merkle root.
+     * @dev Getter function for merkle root.
      */
     function getMerkleRoot() external view returns (bytes32) {
         return root;
     }
 
     /**
-     * @notice Getter function for airdrop token.
+     * @dev Getter function for airdrop token.
      */
     function getAirdropToken() external view returns (IERC20) {
         return airdropToken;
     }
 
     /**
-     * @notice Getter function for phase.
+     * @dev Getter function for phase.
      */
     function getPhase() external view returns (PHASE) {
         return phase;
     }
 
     /**
-     * @notice Function for calculating message hash for signature creation.
+     * @dev Function for calculating message hash for signature creation.
      */
     function _messageHash(address account, address caller, uint256 amount) public view returns (bytes32) {
         return _hashTypedDataV4(
@@ -230,7 +230,7 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice Function varifies the signatory of the signature.
+     * @dev Function varifies the signatory of the signature.
      */
     function _verifySignature(address signetory, bytes32 digest, uint8 v, bytes32 r, bytes32 s)
         private
@@ -242,7 +242,8 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice Chainlink automation function that ensure whether the upkeep is needed or not. returns true if upkeep needed or else false.
+     * @dev Chainlink automation function that ensure whether the upkeep is needed or not. returns true if upkeep needed or else false.
+     * @dev Function will check for whether the time duration of the private phase has been passed or not.
      */
     function checkUpkeep(bytes memory /* checkData */ )
         public
@@ -256,7 +257,8 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice Chainlink automation function, performs the upkeep if it is needed.
+     * @dev Chainlink automation function, performs the upkeep if it is needed.
+     * @dev Function will change the phase of the airdrop and update state variables.
      */
     function performUpkeep(bytes calldata /* performData */ ) external override {
         (bool upkeepNeeded,) = checkUpkeep("");

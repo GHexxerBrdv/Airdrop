@@ -9,21 +9,29 @@ import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProo
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 
+/**
+ * @title AirdropV2
+ * @author Gaurang Bharadava
+ */
 contract AirdropV2 is Ownable, EIP712 {
     using ECDSA for bytes32;
     using SafeERC20 for IERC20;
 
+    /**
+     * @dev Errors to be reverted.
+     */
     error AirdropV2__InvalidProof();
     error AirdropV2__UserHasAlreadyClaim(address account);
     error AirdropV2__InvalidSignature();
     error AirdropV2__InvalidArrayLength();
 
+    /**
+     * @dev State variables
+     */
     IERC20 private airdropToken;
     bytes32 private root;
     bytes32 private constant MESSAGE_TYPEHASH =
         keccak256("AirdropClaim(address account,address permitted,uint256 amount)");
-
-    uint256 nonce = 0;
 
     mapping(address => bool) public hasClaimed;
 
@@ -33,6 +41,9 @@ contract AirdropV2 is Ownable, EIP712 {
         uint256 amount;
     }
 
+    /**
+     * @dev Events to be emited
+     */
     event ClaimedAirdrop(address account, uint256 amount);
     event ClaimSkiped(address account, string message);
 
@@ -74,7 +85,7 @@ contract AirdropV2 is Ownable, EIP712 {
      * @param account The account for the user wants to claim.
      * @param amount Amount for the account the user want to claim.
      * @param proof Proof to verify the whitelisted claimer and amount.
-     * @dev v, r, s The component oof signature user has signed.
+     * @param v, r, s The component oof signature user has signed.
      */
     function claimPermeet(address account, uint256 amount, bytes32[] calldata proof, uint8 v, bytes32 r, bytes32 s)
         external
