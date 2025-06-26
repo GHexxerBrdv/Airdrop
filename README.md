@@ -23,8 +23,8 @@ There is three version of the airdrop smart contract.
 - V1: Admin will set an array of users and their corresponding claimable amount. Which is not secure and more gas consuming.
 - V2: This version of airdrop is very gas efficient and secure, by setting the merkle root of the users and their claimable amount calculated off-chain. This version of airdrop allows user to submit proof and claim their amount by permit other or directly from the contract.
 - V3: This version of airdrop will be held in two phase.
--  1) private phase :- only whitelisted address can claim the amount of tokens by permit other user or directly from the contract.
--  2) public phase :- anyone can claim upto one airdrop token from the airdrop contract.
+  1) private phase :- only whitelisted address can claim the amount of tokens by permit other user or directly from the contract.
+  2) public phase :- anyone can claim upto one airdrop token from the airdrop contract.
 
 **Note:** The private phase will be set for predefined time duration. After that it will automatically set to the public phase, if there is a user who has not claimed their airdrop from private phase, thier token will be automatically transfered to the public phase.
 
