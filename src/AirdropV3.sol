@@ -230,7 +230,7 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     }
 
     /**
-     * @notice Function varifies the signature.
+     * @notice Function varifies the signatory of the signature.
      */
     function _verifySignature(address signetory, bytes32 digest, uint8 v, bytes32 r, bytes32 s)
         private

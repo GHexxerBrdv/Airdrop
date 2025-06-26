@@ -38,11 +38,21 @@ contract AirdropV2 is Ownable, EIP712 {
 
     constructor(string memory name, string memory version) Ownable(msg.sender) EIP712(name, version) {}
 
+    /**
+     * The admin function which allows the owner to setup the airdrop for the intended token.
+     * @param _root Merkle root for the airdrop, To varify the claimer.
+     * @param token Token for which the airdrop will be set.
+     */
     function setAirdrop(bytes32 _root, IERC20 token) external onlyOwner {
         root = _root;
         airdropToken = token;
     }
 
+    /**
+     * @dev Proof will ensure that only intended user or whitelisted user can claim their amount of tokens.
+     * @param amount Amount the user wants to claim.
+     * @param proof Array of proof that verify the claimer and the amount.
+     */
     function claimAirdrop(uint256 amount, bytes32[] calldata proof) external {
         address account = msg.sender;
         if (hasClaimed[account]) {
@@ -59,6 +69,13 @@ contract AirdropV2 is Ownable, EIP712 {
         airdropToken.safeTransfer(account, amount);
     }
 
+    /**
+     * @notice Any user who is permited to claim tokens on behalf of the whitelistd claimer can call this fucntion, but they should have signature signed by the claimer.
+     * @param account The account for the user wants to claim.
+     * @param amount Amount for the account the user want to claim.
+     * @param proof Proof to verify the whitelisted claimer and amount.
+     * @dev v, r, s The component oof signature user has signed.
+     */
     function claimPermeet(address account, uint256 amount, bytes32[] calldata proof, uint8 v, bytes32 r, bytes32 s)
         external
     {
@@ -82,6 +99,12 @@ contract AirdropV2 is Ownable, EIP712 {
         airdropToken.safeTransfer(account, amount);
     }
 
+    /**
+     * @dev function allows any user to batch claim for whitelisted claimers.
+     * @param accounts Array of accounts for user wants to claim.
+     * @param amounts Array of amount corresponding to the account.
+     * @param proofs Array of proofs corresponding to the account.
+     */
     function batchClaim(address[] memory accounts, uint256[] memory amounts, bytes32[][] memory proofs) external {
         if (accounts.length != amounts.length || accounts.length != proofs.length) {
             revert AirdropV2__InvalidArrayLength();
@@ -106,20 +129,32 @@ contract AirdropV2 is Ownable, EIP712 {
         }
     }
 
+    /**
+     * @dev Getter function of merkle root.
+     */
     function getMerkleRoot() external view returns (bytes32) {
         return root;
     }
 
+    /**
+     * @dev Getter function of airdrop token.
+     */
     function getAirdropToken() external view returns (IERC20) {
         return airdropToken;
     }
 
+    /**
+     * @dev Getter function to get message hash for generating signature.
+     */
     function _messageHash(address account, address caller, uint256 amount) public view returns (bytes32) {
         return _hashTypedDataV4(
             keccak256(abi.encode(MESSAGE_TYPEHASH, AirdropClaim({account: account, permited: caller, amount: amount})))
         );
     }
 
+    /**
+     * @dev Function to verify the signatory of the signature.
+     */
     function _verifySignature(address signetory, bytes32 digest, uint8 v, bytes32 r, bytes32 s)
         private
         pure
