@@ -1,0 +1,50 @@
+[
+    {
+        "inputs": [
+            "0xA7407106D3c9a5ab2131a7AcAa343b6219Aa1Dd6",
+            "2000000000000000000"
+        ],
+        "proof": [
+            "0xb6c2b77b66f8dc54e43e8b86df18d9b42ec014140a868cc2c62e91fdc3b038a4",
+            "0xcacc4321590279c65806336bf0de0efd6489f3e11713b61eae11588537794d7e"
+        ],
+        "root": "0x48914914a3d84bc56742f0f5223422cd95d66279e260e0d1728d3fa75aa9cfab",
+        "leaf": "0xf0bc05b8a0b08bf685394dcfeafe865ae9b9754f097549eac06e34a8af8ddf2f"
+    },
+    {
+        "inputs": [
+            "0x54DC75df46f1d1F8fe1a0Fd5E2d86Fe1A9B30D1a",
+            "3000000000000000000"
+        ],
+        "proof": [
+            "0xf0bc05b8a0b08bf685394dcfeafe865ae9b9754f097549eac06e34a8af8ddf2f",
+            "0xcacc4321590279c65806336bf0de0efd6489f3e11713b61eae11588537794d7e"
+        ],
+        "root": "0x48914914a3d84bc56742f0f5223422cd95d66279e260e0d1728d3fa75aa9cfab",
+        "leaf": "0xb6c2b77b66f8dc54e43e8b86df18d9b42ec014140a868cc2c62e91fdc3b038a4"
+    },
+    {
+        "inputs": [
+            "0x97118108D8E46F9E8Bd37B9C77aaf9d4b485D30e",
+            "1000000000000000000"
+        ],
+        "proof": [
+            "0xd39f314e275a80c5a67a608dace9d2122b03884fc01d268d0f386e631c9805b1",
+            "0x92629d8c288cef16ab76c0277ee596d8bc8ea578bb6a0af623677bea0e04bda2"
+        ],
+        "root": "0x48914914a3d84bc56742f0f5223422cd95d66279e260e0d1728d3fa75aa9cfab",
+        "leaf": "0x7d7fceeb59629f2532162f181816bccad1f9d62644dcc1582dd48254ccbb9fe0"
+    },
+    {
+        "inputs": [
+            "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+            "2000000000000000000"
+        ],
+        "proof": [
+            "0x7d7fceeb59629f2532162f181816bccad1f9d62644dcc1582dd48254ccbb9fe0",
+            "0x92629d8c288cef16ab76c0277ee596d8bc8ea578bb6a0af623677bea0e04bda2"
+        ],
+        "root": "0x48914914a3d84bc56742f0f5223422cd95d66279e260e0d1728d3fa75aa9cfab",
+        "leaf": "0xd39f314e275a80c5a67a608dace9d2122b03884fc01d268d0f386e631c9805b1"
+    }
+]

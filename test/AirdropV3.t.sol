@@ -50,7 +50,7 @@ contract AirdropV2Test is Test {
         vm.startPrank(owner);
         proton = new Proton();
         airdrop = new AirdropV3(name, version);
-        airdrop.setAirdrop(root, proton, privateAmount, publicAmount, duration, interval);
+        airdrop.setAirdrop(root, proton, privateAmount, publicAmount, duration);
         proton.setMinterAuthority(minter);
         vm.stopPrank();
 
@@ -67,8 +67,6 @@ contract AirdropV2Test is Test {
         assertEq(proton.balanceOf(address(airdrop)), 110e18);
         assertEq(airdrop.privatePhaseAmount(), 100e18);
         assertEq(airdrop.publicPhaseAmount(), 10e18);
-        assertEq(airdrop.timeDuration(), 1 weeks + 1);
-        assertEq(airdrop.interval(), 0.5 weeks);
         assert(airdrop.getPhase() == AirdropV3.PHASE.PRIVATE);
     }
 
