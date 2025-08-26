@@ -51,8 +51,6 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
     uint256 public privatePhaseAmount;
     uint256 public publicPhaseAmount;
     uint256 public timeDuration;
-    uint256 public interval;
-    uint256 public lastTimestamp;
 
     mapping(address => bool) public hasClaimed;
 
@@ -115,7 +113,6 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
         privatePhaseAmount = _privatePhaseAmount;
         publicPhaseAmount = _publicPhaseAmount;
         timeDuration = block.timestamp + (_duration * 1 minutes);
-        lastTimestamp = block.timestamp;
 
         emit SetUpAirdrop(root, token, privatePhaseAmount, publicPhaseAmount);
     }
@@ -186,7 +183,7 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
 
         address caller = msg.sender;
         uint256 amount = 1e18;
-        if (airdropToken.balanceOf(address(this)) == 0) {
+        if (publicPhaseAmount == 0) {
             revert AirdropV3__ContractHaveNotEnoughBalance();
         }
         if (hasClaimed[caller]) {
@@ -267,8 +264,6 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
             revert AirdropV3__CanNotChangePhase();
         }
 
-        lastTimestamp = block.timestamp;
-        interval = 0;
         timeDuration = 0;
         if (privatePhaseAmount > 0) {
             publicPhaseAmount += privatePhaseAmount;
@@ -276,6 +271,6 @@ contract AirdropV3 is Ownable, EIP712, AutomationCompatibleInterface, Reentrancy
         }
         phase = PHASE.PUBLIC;
 
-        emit AirdropIsNowPublic(lastTimestamp);
+        emit AirdropIsNowPublic(block.timestamp);
     }
 }
