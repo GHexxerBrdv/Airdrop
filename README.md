@@ -92,11 +92,11 @@ ACC5=
 PRIV5=
 ACC6=
 PRIV6=
-POLY= polygon rpc url or other chain rpc url
+RSK= rootstock rpc url [get rpc](https://dashboard.alchemy.com/)
 KEY= etherscan api key in case if you want to verify the contract
 ```
 
-I have takem multiple accounts and thir corresponding private keys to perfrom claims.
+I have taken multiple accounts and their corresponding private keys to perform claims.
 
 You have to run following command to access accounts and privatkeys from .env file
 
@@ -132,6 +132,13 @@ this command will view the state change in airdrop after claiming the airdrop.
 ```bash
 forge script script/InteractionsV3.s.sol:ViewState --private-key $PRIV1 --rpc-url $POLY --broadcast
 ```
+
+## Transactions on block explorer
+
+After deploying the contract on rootstock testnet you can see the transaction on [explorer](https://explorer.testnet.rootski.io/)
+
+You have to just enter your deployed contract address or the transaction hash in serach bar in the explorer. And you can the trasaction over there.
+
 
 ## Testing
 
